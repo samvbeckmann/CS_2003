@@ -67,10 +67,6 @@ public class TaskQueue
         System.out.println(time + ": Task " + newTask.id
                 + " enqueued (transaction time="
                 + newTask.transactionTime + ")");
-        // * TO COMPLETE *
-        // enqueue the newTask
-        // if the new task can start immediately, update the dequeue
-        // time and print out that the task is starting
 
         Q.enqueue(newTask);
 
@@ -130,28 +126,15 @@ public class TaskQueue
             System.out.println("idle");
         if (time == dequeueTime)
         {
-            // * TO COMPLETE *
-            // Remove task from queue and print out that it has been completed
             Task completed = Q.dequeue();
             System.out.println("Task " + completed.id + " completed.");
 
             if (!Q.isEmpty())
             {
-                // * TO COMPLETE *
-                // Set dequeueTime by looking at the (but not removing) task
-                // at the front of the queue
-                // Set the startTime of this task to time
-                // Print out that next job starts processing
-                // Increment total wait time by the wait time for this task
-
                 dequeueTime = time + Q.peek().transactionTime;
-
                 Q.peek().startTime = time;
-
                 System.out.println(time + ": Task " + Q.peek().id + " started.");
-
                 totalWaitTime += Q.peek().transactionTime;
-
             }
         } else if (!Q.isEmpty())
             System.out.println("Task " + Q.peek().id + " is being processed,");
