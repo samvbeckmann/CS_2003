@@ -29,6 +29,7 @@ Recursively determines if an input String is a palindrome.
 Evaluating integer postfix expressions.
 
 #### Lab 8:
+Simulating a Queue to estimate total wait time.
 
 Projects
 --------
@@ -37,7 +38,7 @@ Projects
 Creating a set data type.
 
 #### Project 2:
-Solving the NQueens problem recursively.
+Solving the NQueens problem recursively. (And iteratively!)
 
 Copyright
 ---------

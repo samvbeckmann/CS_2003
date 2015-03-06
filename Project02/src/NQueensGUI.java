@@ -1,15 +1,19 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.*;
 
 public class NQueensGUI implements ActionListener
 {
     /**
-     * class that solves the NQueens problem
+     * Class that solves the NQueens problem recursively
      */
-    NQueens nQueens;
+    NQueensRecursive nQueensRecursive;
+
+    /**
+     * Class that solves the NQueens problem iteratively
+     */
+    NQueensIterative nQueensIterative;
 
     /**
      * Main frame that contains everything
@@ -33,9 +37,15 @@ public class NQueensGUI implements ActionListener
 
     /**
      * Button to launch the search of an assignment of the N queens
-     * on the chess board
+     * on the chess board (recursive method)
      */
-    JButton placeButton;
+    JButton recursiveButton;
+
+    /**
+     * Button to launch the search of an assignment of the N queens
+     * on the chess board (iterative method)
+     */
+    JButton iterativeButton;
 
     /**
      * model for the board represented by a Table
@@ -69,7 +79,7 @@ public class NQueensGUI implements ActionListener
     {
         JFrame.setDefaultLookAndFeelDecorated(true);
         // create and set up the window
-        boardFrame = new JFrame("NQueens");
+        boardFrame = new JFrame("NQueensRecursive");
         boardFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // create and set up the pannel
         boardPanel = new JPanel();
@@ -79,9 +89,9 @@ public class NQueensGUI implements ActionListener
         // Add the panel to the window.
         boardFrame.getContentPane().add(boardPanel, BorderLayout.CENTER);
         // Set the button to be default button in the frame.
-        boardFrame.getRootPane().setDefaultButton(placeButton);
+        boardFrame.getRootPane().setDefaultButton(recursiveButton);
         // Display the window.
-        boardFrame.setSize(new Dimension(600, 600));
+        boardFrame.setSize(new Dimension(600, 750));
         boardFrame.setVisible(true);
     }
 
@@ -95,9 +105,12 @@ public class NQueensGUI implements ActionListener
         sizeField.setHorizontalAlignment(JTextField.TRAILING);
         sizeField.setSize(30, 10);
         sizeLabel = new JLabel("number of queens");
-        // button to launch the resolution
-        placeButton = new JButton("Place queens");
-        placeButton.setSize(30, 20);
+        // button to launch the recursive resolution
+        recursiveButton = new JButton("Recursive");
+        recursiveButton.setSize(30, 20);
+        // button to launch the iterative resolution
+        iterativeButton = new JButton("Iterative");
+        iterativeButton.setSize(30, 20);
         // status label
         statusLabel = new JLabel();
         statusLabel.setSize(40, 10);
@@ -107,20 +120,22 @@ public class NQueensGUI implements ActionListener
         board.setGridColor(Color.CYAN);
         board.setShowGrid(true);
         board.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        JScrollPane scrollpane = new JScrollPane(board);
+        JScrollPane scrollPane = new JScrollPane(board);
         renderer = new CustomTableCellRenderer();
         // label for the statistics of the resolution
         statsLabel = new JLabel();
         statsLabel.setHorizontalTextPosition(4);
         board.setDefaultRenderer(Object.class, renderer);
         // Listen to the events from the place queens button
-        placeButton.addActionListener(this);
+        recursiveButton.addActionListener(this);
+        iterativeButton.addActionListener(this);
         // add the widget to the container
         boardPanel.add(sizeLabel);
         boardPanel.add(sizeField);
-        boardPanel.add(placeButton);
+        boardPanel.add(recursiveButton);
+        boardPanel.add(iterativeButton);
         boardPanel.add(statusLabel);
-        boardPanel.add(scrollpane, BorderLayout.CENTER);
+        boardPanel.add(scrollPane, BorderLayout.CENTER);
         boardPanel.add(statsLabel);
     }
 
@@ -142,44 +157,86 @@ public class NQueensGUI implements ActionListener
         board.repaint();
         int size = Integer.parseInt(sizeField.getText());
         // create the Queens
-        nQueens = new NQueens(size);
+        if (event.getSource() == recursiveButton)
+            nQueensRecursive = new NQueensRecursive(size);
+        else
+            nQueensIterative = new NQueensIterative(size);
+
         // get the current time
 
         sizeField.setText("");
         long cputime = 0, finish = 0, start = System.currentTimeMillis();
-        if (nQueens.placeQueens())
-        {// success!
-            finish = System.currentTimeMillis(); // get the current time
-            statusLabel.setText("<html><font face='Verdana' color = 'gray'>"
-                    + "<br><br><br>A solution to " + size + " Queens"
-                    + "</font></html>");
-            //	    statusLabel.setText("Solution Found");
-            data = new Object[size][size];
-            Object[] columnName = new String[size];
-            cputime = finish - start;
-            // prepare the table: leave blank where there is no queen
-            // write Q where there is a queen
-            for (int i = 0; i < size; i++)
-            {
-                columnName[i] = Integer.toString(i);
-                for (int j = 0; j < size; j++)
-                    if (nQueens.board[i][j] == NQueens.QUEEN)
-                        data[i][j] = "Q";
-                    else
-                        data[i][j] = "";
+        if (event.getSource() == recursiveButton)
+        {
+            if (nQueensRecursive.placeQueens())
+            {// success!
+                finish = System.currentTimeMillis(); // get the current time
+                statusLabel.setText("<html><font face='Verdana' color = 'gray'>"
+                        + "<br><br><br>A solution to " + size + " Queens"
+                        + "</font></html>");
+                //	    statusLabel.setText("Solution Found");
+                data = new Object[size][size];
+                Object[] columnName = new String[size];
+                cputime = finish - start;
+                // prepare the table: leave blank where there is no queen
+                // write Q where there is a queen
+                for (int i = 0; i < size; i++)
+                {
+                    columnName[i] = Integer.toString(i);
+                    for (int j = 0; j < size; j++)
+                        if (nQueensRecursive.board[i][j] == NQueensRecursive.QUEEN)
+                            data[i][j] = "Q";
+                        else
+                            data[i][j] = "";
+                }
+            } else
+            { // failure no solution for NQueensRecursive was found!
+                data = null;
+                statusLabel.setText("No solution found!");
             }
+
+            // update the GUI
+            bModel.update(data);
+            statsLabel.setText("<html><font face='Verdana' color = 'gray'>"
+                    + "CPU time =" + ((float) cputime / 1000) + "sec<br>"
+                    + nQueensRecursive.getStatsInHTML()
+                    + "</font></html>");
         } else
-        { // failure no solution for NQueens was found!
-            data = null;
-            statusLabel.setText("No solution found!");
+        {
+            if (nQueensIterative.placeQueens())
+            {// success!
+                finish = System.currentTimeMillis(); // get the current time
+                statusLabel.setText("<html><font face='Verdana' color = 'gray'>"
+                        + "<br><br><br>A solution to " + size + " Queens"
+                        + "</font></html>");
+                //	    statusLabel.setText("Solution Found");
+                data = new Object[size][size];
+                Object[] columnName = new String[size];
+                cputime = finish - start;
+                // prepare the table: leave blank where there is no queen
+                // write Q where there is a queen
+                for (int i = 0; i < size; i++)
+                {
+                    columnName[i] = Integer.toString(i);
+                    for (int j = 0; j < size; j++)
+                        if (nQueensIterative.board[i][j] == NQueensRecursive.QUEEN)
+                            data[i][j] = "Q";
+                        else
+                            data[i][j] = "";
+                }
+            } else
+            { // failure no solution for NQueensRecursive was found!
+                data = null;
+                statusLabel.setText("No solution found!");
+            }
+            // update the GUI
+            bModel.update(data);
+            statsLabel.setText("<html><font face='Verdana' color = 'gray'>"
+                    + "CPU time =" + ((float) cputime / 1000) + "sec<br>"
+                    + nQueensIterative.getStatsInHTML()
+                    + "</font></html>");
+            this.board.repaint();
         }
-        // update the GUI
-        bModel.update(data);
-        statsLabel.setText("<html><font face='Verdana' color = 'gray'>"
-                + "CPU time =" + ((float) cputime / 1000) + "sec<br>"
-                + nQueens.getStatsInHTML()
-                + "</font></html>");
-        this.board.repaint();
     }
 
     /**
@@ -251,7 +308,7 @@ public class NQueensGUI implements ActionListener
      * the number of queens that can attack the position: it is darker
      * when more queens can attack the position.
      * <p/>
-     * Warning: use the board of the NQueens class to know how many
+     * Warning: use the board of the NQueensRecursive class to know how many
      * queens can attack a given location
      */
     public class CustomTableCellRenderer extends DefaultTableCellRenderer
@@ -274,7 +331,7 @@ public class NQueensGUI implements ActionListener
                     cell.setBackground(Color.RED);
                 else
                 {
-                    int amount = nQueens.board[row][column];
+                    int amount = nQueensRecursive.board[row][column];
                     Color c;
                     if (amount * 15 < 255)
                         c = new Color(0, 0, 0, amount * 15);

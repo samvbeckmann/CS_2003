@@ -1,4 +1,4 @@
-class NQueens
+class NQueensRecursive
 {
     /**
      * squares per row or column
@@ -45,7 +45,7 @@ class NQueens
     /**
      * creates an empty square board
      */
-    public NQueens(int size)
+    public NQueensRecursive(int size)
     {
         BOARD_SIZE = size;
         board = new int[BOARD_SIZE][BOARD_SIZE];
@@ -287,10 +287,10 @@ class NQueens
     public String getStatsInHTML()
     {
         return
-                "Statistics for NQueens on a " + BOARD_SIZE + " x " + BOARD_SIZE
+                "Statistics for NQueensRecursive on a " + BOARD_SIZE + " x " + BOARD_SIZE
                         + " chess board <br>"
                         + "Number of Back Tracks: " + backTracks + "<br>"
                         + "Number of isUnderAttack() calls : " + isUnderAttackCalls + "<br>"
                         + "Number of times Queens were placed: " + numPlacedQueens + "<br>";
     } // end getStatsinHTML
-} // end NQueens
+} // end NQueensRecursive
