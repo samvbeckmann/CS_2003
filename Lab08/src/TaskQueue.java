@@ -74,7 +74,6 @@ public class TaskQueue
         {
             Q.peek().startTime = time;
             dequeueTime = time + Q.peek().transactionTime;
-            totalWaitTime += Q.peek().transactionTime;
             System.out.println(time + ": Task " + Q.peek().id + " started.");
         }
     }
@@ -134,7 +133,7 @@ public class TaskQueue
                 dequeueTime = time + Q.peek().transactionTime;
                 Q.peek().startTime = time;
                 System.out.println(time + ": Task " + Q.peek().id + " started.");
-                totalWaitTime += Q.peek().transactionTime;
+                totalWaitTime += time - Q.peek().arrivalTime;
             }
         } else if (!Q.isEmpty())
             System.out.println("Task " + Q.peek().id + " is being processed,");
