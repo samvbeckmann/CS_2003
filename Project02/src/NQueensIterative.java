@@ -1,7 +1,11 @@
 import java.util.Random;
 
 /**
- * Created by SAM on 2015-03-05.
+ * Iterative solution to the N-Queens problem
+ *
+ * @author Sam Beckmann
+ * ID: 1443946
+ * CS 2003-01
  */
 public class NQueensIterative
 {
@@ -62,6 +66,11 @@ public class NQueensIterative
         rnd = new Random();
     } // end constructor
 
+    /**
+     * Solves the n queens problem
+     *
+     * @return true if a solution was found, otherwise false.
+     */
     public boolean placeQueens()
     {
         // see if the operation is possible
@@ -108,7 +117,7 @@ public class NQueensIterative
         // check the row that the queen is in.
         for (int i = 0; i < BOARD_SIZE; i++)
         {
-            if(board[row][i] != EMPTY)
+            if(board[row][i] != EMPTY && i != col)
                 counter++;
         }
 
@@ -276,7 +285,7 @@ public class NQueensIterative
     private void markBackward(int row, int col)
     {
         int step = 1;
-        while(col - step <= 0)
+        while(col - step >= 0)
         {
             // mark same row in marking column
             if (board[row][col - step] == QUEEN)

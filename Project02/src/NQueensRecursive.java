@@ -1,3 +1,10 @@
+/**
+ * Recursive solution to the N-Queens problem
+ *
+ * @author Sam Beckmann
+ * ID: 1443946
+ * CS 2003-01
+ */
 class NQueensRecursive
 {
     /**
@@ -272,10 +279,7 @@ class NQueensRecursive
     private boolean isUnderAttack(int row, int column)
     {
         isUnderAttackCalls++;
-        if (board[row][column] != EMPTY)
-            return true;
-        else
-            return false;
+        return board[row][column] != EMPTY;
     }  // end isUnderAttack
 
 

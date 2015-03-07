@@ -73,6 +73,13 @@ public class NQueensGUI implements ActionListener
     JLabel statsLabel;
 
     /**
+     * Solution used to solve the problem
+     * <code>1 = recursive implementation</code><p>
+     * <code>2 = iterative implementation</code>
+     */
+    int solution;
+
+    /**
      * Constructor
      */
     public NQueensGUI()
@@ -168,6 +175,7 @@ public class NQueensGUI implements ActionListener
         long cputime = 0, finish = 0, start = System.currentTimeMillis();
         if (event.getSource() == recursiveButton)
         {
+            solution = 1;
             if (nQueensRecursive.placeQueens())
             {// success!
                 finish = System.currentTimeMillis(); // get the current time
@@ -203,6 +211,7 @@ public class NQueensGUI implements ActionListener
                     + "</font></html>");
         } else
         {
+            solution = 2;
             if (nQueensIterative.placeQueens())
             {// success!
                 finish = System.currentTimeMillis(); // get the current time
@@ -331,7 +340,11 @@ public class NQueensGUI implements ActionListener
                     cell.setBackground(Color.RED);
                 else
                 {
-                    int amount = nQueensRecursive.board[row][column];
+                    int amount;
+                    if (solution == 1)
+                        amount = nQueensRecursive.board[row][column];
+                    else
+                        amount = nQueensIterative.board[row][column];
                     Color c;
                     if (amount * 15 < 255)
                         c = new Color(0, 0, 0, amount * 15);
