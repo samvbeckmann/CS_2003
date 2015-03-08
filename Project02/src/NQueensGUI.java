@@ -152,100 +152,104 @@ public class NQueensGUI implements ActionListener
      */
     public void actionPerformed(ActionEvent event)
     {
-        // object for the model
-        Object[][] data = null;
-        statusLabel.setText("Computing ...");
-        bModel.update(data);
-        statsLabel.setText("<html><font face='Verdana' color = 'gray'>"
-                + "<hr> Computing <hr><br>"
-                + "</font></html>");
-        statusLabel.repaint();
-        statsLabel.repaint();
-        board.repaint();
-        int size = Integer.parseInt(sizeField.getText());
-        // create the Queens
-        if (event.getSource() == recursiveButton)
-            nQueensRecursive = new NQueensRecursive(size);
-        else
-            nQueensIterative = new NQueensIterative(size);
-
-        // get the current time
-
-        sizeField.setText("");
-        long cputime = 0, finish = 0, start = System.currentTimeMillis();
-        if (event.getSource() == recursiveButton)
+        if (!sizeField.getText().isEmpty())
         {
-            solution = 1;
-            if (nQueensRecursive.placeQueens())
-            {// success!
-                finish = System.currentTimeMillis(); // get the current time
-                statusLabel.setText("<html><font face='Verdana' color = 'gray'>"
-                        + "<br><br><br>A solution to " + size + " Queens"
-                        + "</font></html>");
-                //	    statusLabel.setText("Solution Found");
-                data = new Object[size][size];
-                Object[] columnName = new String[size];
-                cputime = finish - start;
-                // prepare the table: leave blank where there is no queen
-                // write Q where there is a queen
-                for (int i = 0; i < size; i++)
-                {
-                    columnName[i] = Integer.toString(i);
-                    for (int j = 0; j < size; j++)
-                        if (nQueensRecursive.board[i][j] == NQueensRecursive.QUEEN)
-                            data[i][j] = "Q";
-                        else
-                            data[i][j] = "";
-                }
-            } else
-            { // failure no solution for NQueensRecursive was found!
-                data = null;
-                statusLabel.setText("No solution found!");
-            }
-
-            // update the GUI
+            // object for the model
+            Object[][] data = null;
+            statusLabel.setText("Computing ...");
             bModel.update(data);
             statsLabel.setText("<html><font face='Verdana' color = 'gray'>"
-                    + "CPU time =" + ((float) cputime / 1000) + "sec<br>"
-                    + nQueensRecursive.getStatsInHTML()
+                    + "<hr> Computing <hr><br>"
                     + "</font></html>");
+            statusLabel.repaint();
+            statsLabel.repaint();
+            board.repaint();
+            int size = Integer.parseInt(sizeField.getText());
+            // create the Queens
+            if (event.getSource() == recursiveButton)
+                nQueensRecursive = new NQueensRecursive(size);
+            else
+                nQueensIterative = new NQueensIterative(size);
+
+            // get the current time
+
+            sizeField.setText("");
+            long cputime = 0, finish = 0, start = System.currentTimeMillis();
+            if (event.getSource() == recursiveButton)
+            {
+                solution = 1;
+                if (nQueensRecursive.placeQueens())
+                {// success!
+                    finish = System.currentTimeMillis(); // get the current time
+                    statusLabel.setText("<html><font face='Verdana' color = 'gray'>"
+                            + "<br><br><br>A solution to " + size + " Queens"
+                            + "</font></html>");
+                    //	    statusLabel.setText("Solution Found");
+                    data = new Object[size][size];
+                    Object[] columnName = new String[size];
+                    cputime = finish - start;
+                    // prepare the table: leave blank where there is no queen
+                    // write Q where there is a queen
+                    for (int i = 0; i < size; i++)
+                    {
+                        columnName[i] = Integer.toString(i);
+                        for (int j = 0; j < size; j++)
+                            if (nQueensRecursive.board[i][j] == NQueensRecursive.QUEEN)
+                                data[i][j] = "Q";
+                            else
+                                data[i][j] = "";
+                    }
+                } else
+                { // failure no solution for NQueensRecursive was found!
+                    data = null;
+                    statusLabel.setText("No solution found!");
+                }
+
+                // update the GUI
+                bModel.update(data);
+                statsLabel.setText("<html><font face='Verdana' color = 'gray'>"
+                        + "CPU time =" + ((float) cputime / 1000) + "sec<br>"
+                        + nQueensRecursive.getStatsInHTML()
+                        + "</font></html>");
+            } else
+            {
+                solution = 2;
+                if (nQueensIterative.placeQueens())
+                {// success!
+                    finish = System.currentTimeMillis(); // get the current time
+                    statusLabel.setText("<html><font face='Verdana' color = 'gray'>"
+                            + "<br><br><br>A solution to " + size + " Queens"
+                            + "</font></html>");
+                    //	    statusLabel.setText("Solution Found");
+                    data = new Object[size][size];
+                    Object[] columnName = new String[size];
+                    cputime = finish - start;
+                    // prepare the table: leave blank where there is no queen
+                    // write Q where there is a queen
+                    for (int i = 0; i < size; i++)
+                    {
+                        columnName[i] = Integer.toString(i);
+                        for (int j = 0; j < size; j++)
+                            if (nQueensIterative.board[i][j] == NQueensRecursive.QUEEN)
+                                data[i][j] = "Q";
+                            else
+                                data[i][j] = "";
+                    }
+                } else
+                { // failure no solution for NQueensRecursive was found!
+                    data = null;
+                    statusLabel.setText("No solution found!");
+                }
+                // update the GUI
+                bModel.update(data);
+                statsLabel.setText("<html><font face='Verdana' color = 'gray'>"
+                        + "CPU time =" + ((float) cputime / 1000) + "sec<br>"
+                        + nQueensIterative.getStatsInHTML()
+                        + "</font></html>");
+                this.board.repaint();
+            }
         } else
-        {
-            solution = 2;
-            if (nQueensIterative.placeQueens())
-            {// success!
-                finish = System.currentTimeMillis(); // get the current time
-                statusLabel.setText("<html><font face='Verdana' color = 'gray'>"
-                        + "<br><br><br>A solution to " + size + " Queens"
-                        + "</font></html>");
-                //	    statusLabel.setText("Solution Found");
-                data = new Object[size][size];
-                Object[] columnName = new String[size];
-                cputime = finish - start;
-                // prepare the table: leave blank where there is no queen
-                // write Q where there is a queen
-                for (int i = 0; i < size; i++)
-                {
-                    columnName[i] = Integer.toString(i);
-                    for (int j = 0; j < size; j++)
-                        if (nQueensIterative.board[i][j] == NQueensRecursive.QUEEN)
-                            data[i][j] = "Q";
-                        else
-                            data[i][j] = "";
-                }
-            } else
-            { // failure no solution for NQueensRecursive was found!
-                data = null;
-                statusLabel.setText("No solution found!");
-            }
-            // update the GUI
-            bModel.update(data);
-            statsLabel.setText("<html><font face='Verdana' color = 'gray'>"
-                    + "CPU time =" + ((float) cputime / 1000) + "sec<br>"
-                    + nQueensIterative.getStatsInHTML()
-                    + "</font></html>");
-            this.board.repaint();
-        }
+            statsLabel.setText("No input.");
     }
 
     /**
