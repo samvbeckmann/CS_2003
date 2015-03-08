@@ -74,7 +74,7 @@ public class NQueensIterative
     public boolean placeQueens()
     {
         // see if the operation is possible
-        if (BOARD_SIZE < 4)
+        if (BOARD_SIZE < 4 && BOARD_SIZE != 1)
             return false;
 
         // randomly initialize queens, one per column

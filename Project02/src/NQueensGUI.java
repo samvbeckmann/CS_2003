@@ -21,7 +21,7 @@ public class NQueensGUI implements ActionListener
     JFrame boardFrame;
 
     /**
-     * Main panek that contains all the widgets
+     * Main panel that contains all the widgets
      */
     JPanel boardPanel;
 
