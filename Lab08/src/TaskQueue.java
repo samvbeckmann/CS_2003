@@ -1,5 +1,5 @@
 /**
- *
+ * Queue of active tasks for simulating a processing in a queue.
  *
  * @author Sam Beckmann
  * ID: 1443946
