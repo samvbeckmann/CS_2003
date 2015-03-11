@@ -332,8 +332,9 @@ public class NQueensIterative
      */
     public String getStatsInHTML()
     {
+        System.out.print(BOARD_SIZE + "," + isUnderAttackCalls + "," + numPlacedQueens + "\n");
         return
-                "Statistics for NQueensRecursive on a " + BOARD_SIZE + " x " + BOARD_SIZE
+                "Statistics for NQueensIterative on a " + BOARD_SIZE + " x " + BOARD_SIZE
                         + " chess board <br>"
                         + "Number of isUnderAttack() calls : " + isUnderAttackCalls + "<br>"
                         + "Number of times Queens were placed: " + numPlacedQueens + "<br>";
