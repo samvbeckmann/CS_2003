@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -7,69 +9,33 @@ import java.util.Random;
  * ID: 1443946
  * CS 2003-01
  */
-public class NQueensIterative
+public class NQueensIterative extends AbstractNQueens
 {
-
-    /**
-     * indicate an empty square
-     */
-    public static final int EMPTY = 0;
-
-    /**
-     * indicate square contains a queen
-     */
-    public static final int QUEEN = -1;
-
     /**
      * Random generator for NQueensIterative
      */
     private Random rnd;
 
     /**
-     * squares per row or column
-     */
-    private int BOARD_SIZE;
-
-    /**
-     * chess board: each entry <code>board[i][j]</code> of the board
-     * can take the following values:
-     * <li> QUEEN = -1 : indicating the presence of a queen
-     * <li> EMPTY = 0  : indicating an empty cell
-     * <li> <code>i>0</code> : where <code>i</code> number of queens that can
-     * attack the cell <code>(i,j)</code>
-     */
-    public int [][] board;
-
-    /**
      * Vector storing the rows of the current queen in each column.
      */
     private int [] queenPositions;
 
-    /**
-     * number of locations that have been checked to be under attack
-     * at some point in the search process
-     */
-    private int isUnderAttackCalls;
-
-    /**
-     * current number of placed queens
-     */
-    private int numPlacedQueens;
-
     public NQueensIterative(int size)
     {
-        BOARD_SIZE = size;
-        board = new int[size][size];
+        super(size);
         queenPositions = new int [size];
-        isUnderAttackCalls = 0;
-        numPlacedQueens = 0;
         rnd = new Random();
     } // end constructor
 
     /**
-     * Solves the n queens problem
+     * Solves the n queens problem iteratively by first placing a queen in each column
+     * (such that no two are in the same row) then moving the queen under attack from
+     * the most other queens into the spot in its column under attack from the least
+     * number of queens. This process is then repeated until a solution is found.
+     * NOTE: This method could get stuck and not find a solution.
      *
-     * @return true if a solution was found, otherwise false.
+     * @return <code>true</code> if a solution was found, otherwise <code>false</code>.
      */
     public boolean placeQueens()
     {
@@ -77,24 +43,37 @@ public class NQueensIterative
         if (BOARD_SIZE < 4 && BOARD_SIZE != 1)
             return false;
 
+        List<Integer> indices = new ArrayList<Integer>(BOARD_SIZE);
+
+        // Index indices where queens can be placed.
+        for (int i = 0; i < BOARD_SIZE; i++)
+        {
+            indices.add(i);
+        }
+
         // randomly initialize queens, one per column
         for (int i = 0; i < BOARD_SIZE; i++)
         {
-            placeQueenRandomly(i);
+            placeQueenRandomly(i, indices);
         }
 
         while(true)
         {
+            // Find queen attacked by the greatest number of queens.
             int columnToMove = underMostAttack();
 
-            // return true if the operation is complete.
+            // Return true if a solution is found.
             if (columnToMove == -1)
             {
                 markBoard();
                 return true;
+            } else if (numPlacedQueens > BOARD_SIZE * 1000)
+            {
+                return false;
             }
             else
             {
+                // Move the queen the the row in its column under least attack.
                 int newRow = rowUnderLeastAttack(columnToMove);
                 moveQueen(queenPositions[columnToMove], newRow, columnToMove);
             }
@@ -197,13 +176,15 @@ public class NQueensIterative
     } // end rowUnderLeastAttack
 
     /**
-     * Randomly places a queen in a row in the given column.
+     * Randomly places a queen in an available row in the given column.
      *
-     * @param col column to place the queen in.
+     * @param col  Column to place the queen in.
+     * @param rows List of the rows that are currently unoccupied,
+     *             where a queen can be placed.
      */
-    private void placeQueenRandomly(int col)
+    private void placeQueenRandomly(int col, List<Integer> rows)
     {
-        int row = rnd.nextInt(BOARD_SIZE);
+        int row = rows.remove(rnd.nextInt(rows.size()));
         board[row][col] = QUEEN;
         queenPositions[col] = row;
         numPlacedQueens++;
@@ -324,20 +305,5 @@ public class NQueensIterative
                 board[i][col]++;
         }
     } // end markColumn
-
-    /**
-     * Gets the stats for the solution to this problem, formatted in HTML
-     *
-     * @return HTML formatted stats for found solution.
-     */
-    public String getStatsInHTML()
-    {
-        System.out.print(BOARD_SIZE + "," + isUnderAttackCalls + "," + numPlacedQueens + "\n");
-        return
-                "Statistics for NQueensIterative on a " + BOARD_SIZE + " x " + BOARD_SIZE
-                        + " chess board <br>"
-                        + "Number of isUnderAttack() calls : " + isUnderAttackCalls + "<br>"
-                        + "Number of times Queens were placed: " + numPlacedQueens + "<br>";
-    }
 
 } // end NQueensIterative

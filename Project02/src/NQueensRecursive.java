@@ -5,60 +5,20 @@
  * ID: 1443946
  * CS 2003-01
  */
-class NQueensRecursive
+class NQueensRecursive extends AbstractNQueens
 {
-    /**
-     * squares per row or column
-     */
-    private int BOARD_SIZE;
-
-    /**
-     * indicate an empty square
-     */
-    public static final int EMPTY = 0;
-
-    /**
-     * indicate square contains a queen
-     */
-    public static final int QUEEN = -1;
-
-    /**
-     * chess board: each entry <code>board[i][j]</code> of the board
-     * can take the following values:
-     * <li> QUEEN = -1 : indicating the presence of a queen
-     * <li> EMPTY = 0  : indicating an empty cell
-     * <li> <code>i>0</code> : where <code>i</code> number of queens that can
-     * attack the cell <code>(i,j)</code>
-     */
-    public int board[][];
-
     /**
      * current number of backtracks
      */
     private int backTracks;
 
     /**
-     * number of locations that have been checked to be under attack
-     * at some point in the search process
-     */
-    private int isUnderAttackCalls;
-
-    /**
-     * current number of placed queens
-     */
-    private int numPlacedQueens;
-
-
-    /**
      * creates an empty square board
      */
     public NQueensRecursive(int size)
     {
-        BOARD_SIZE = size;
-        board = new int[BOARD_SIZE][BOARD_SIZE];
+        super(size);
         backTracks = 0;
-        isUnderAttackCalls = 0;
-        numPlacedQueens = 0;
     }  // end constructor         
 
 
@@ -290,11 +250,7 @@ class NQueensRecursive
      */
     public String getStatsInHTML()
     {
-        return
-                "Statistics for NQueensRecursive on a " + BOARD_SIZE + " x " + BOARD_SIZE
-                        + " chess board <br>"
-                        + "Number of Back Tracks: " + backTracks + "<br>"
-                        + "Number of isUnderAttack() calls : " + isUnderAttackCalls + "<br>"
-                        + "Number of times Queens were placed: " + numPlacedQueens + "<br>";
+        return super.getStatsInHTML() +
+                        "Number of Back Tracks: " + backTracks + "<br>";
     } // end getStatsinHTML
 } // end NQueensRecursive
