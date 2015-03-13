@@ -1,3 +1,5 @@
+import ListReferencedBased.ListException;
+
 public interface SortedListInterface<E extends Comparable<? super E>>
     extends BasicListInterface<E> {
 

@@ -4,7 +4,7 @@ package ListReferencedBased;
  * Interface ListInterface for the ADT list.
  */
 
-public interface ListInterface<E> extends BasicListerface<E>{
+public interface ListInterface<E> extends BasicListInterface<E>{
     
     /**
      * Inserts the specified element at the specified position in this

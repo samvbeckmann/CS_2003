@@ -131,7 +131,7 @@ public class ListReferenceBased<E> implements ListInterface<E>, Iterable<E>{
 
     /**
      * appends the specified element to the end of this list.
-     * @param elt element to be added at the end of the list
+     * @param item element to be added at the end of the list
      */
     public void append(E item)
     {
@@ -188,7 +188,7 @@ public class ListReferenceBased<E> implements ListInterface<E>, Iterable<E>{
      * otherwise state that the item is not in the current
      * list. Shifts any subsequent elements to the left (subtracts one
      * from their indices).
-     * @param elt the element, if it exists, to delete
+     * @param item the element, if it exists, to delete
      */
     public void delete(E item){
 	int index = contains(item);
