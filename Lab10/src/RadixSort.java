@@ -1,3 +1,8 @@
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 /**
  * Implementation of Radix Sort with multiple queues
  *
@@ -5,12 +10,6 @@
  * ID: 1443946
  * CS 2003
  */
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
-
 public class RadixSort
 {
 

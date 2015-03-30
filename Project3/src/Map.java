@@ -60,8 +60,9 @@ public class Map
     // if it exists in the map, otherwise return null.
     public City getCity(String cityName)
     {
-        for (City city : adjList)
+        for (int i = 1; i <= adjList.size(); i++)
         {
+            City city = adjList.get(i);
             if (city.getName().equals(cityName))
                 return city;
         }
@@ -78,12 +79,19 @@ public class Map
         //   if that City is unvisited return it
         //
         // if no unvisited neighbor of ct remains, return null
-        City nextCity = getCity(ct.getNextCityName());
+        try
+        {
+            City nextCity = getCity(ct.getNextCityName());
 
-        if (nextCity != null)
-            return nextCity;
-        else
+            if (nextCity != null)
+                return nextCity;
+            else
+                return null;
+        } catch (IndexOutOfBoundsException e)
+        {
             return null;
+        }
+
         // NEED CODE FOR PROJECT
     }
 
@@ -106,15 +114,66 @@ public class Map
 
         City originCity = getCity(origin);
         if (originCity == null)
-            System.out.println("No flights from " + origin);
+            System.out.println("No flights from " + origin + "\n");
         else
         {
-            City destinationCity = new City(destination);
-            StackInterface<City> stack = new StackVectorBased<City>();
+            City endCity = getCity(destination);
+            StackInterface<City> path = new StackVectorBased<City>();
+            path.push(originCity);
+            boolean flag = true;
+            while (path.peek() != endCity)
+            {
+                City nextCity = this.getNextCity(path.peek());
+                if (nextCity != null)
+                {
+                    path.push(nextCity);
+                    nextCity.markVisited();
+                } else
+                {
+                    path.pop();
+                }
+                if (path.isEmpty())
+                {
+                    flag = false;
+                    break;
+                }
+            }
+            unvisitAll();
+
+            if (flag)
+            {
+                System.out.println(getPath(path));
+            } else
+            {
+                System.out.println("No Path Found.\n");
+            }
 
             // NEED CODE FOR PROJECT
             // Use stack to search the map and if path is found,
             // print out the path and the total cost
         }
     } // end isPath
+
+    private static String getPath(StackInterface<City> reversePath)
+    {
+        StackInterface<City> path = new StackVectorBased<City>();
+        while (!reversePath.isEmpty())
+        {
+            path.push(reversePath.pop());
+        }
+        City buffer1 = path.pop();
+        City buffer2;
+        String result = "";
+        int totalCost = 0;
+        while (!path.isEmpty())
+        {
+            buffer2 = path.pop();
+            Destination dest = buffer1.findDest(buffer2.getName());
+            result += buffer1 + " --> " + dest.toString() + "\n";
+            totalCost += dest.getCost();
+            buffer1 = buffer2;
+        }
+        result += "Total Cost: " + totalCost + "\n";
+        return result;
+    }
 }
