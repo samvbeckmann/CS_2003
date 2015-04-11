@@ -13,7 +13,7 @@ import java.util.Random;
 public class SortDriver
 {
     private static final int[] SAMPLE_SIZES = {100, 1000, 10000};
-    private static final int NUM_TESTS = 10;
+    private static final int NUM_TESTS = 25;
     private static final int NUM_ALGORITHMS = 6;
 
     public static void main(String[] args)
@@ -37,7 +37,7 @@ public class SortDriver
 
                 for (int j = 0; j < NUM_ALGORITHMS; j++)
                 {
-                    Integer[] localCopy  = new Integer[size];
+                    Integer[] localCopy = new Integer[size];
                     System.arraycopy(dataset, 0, localCopy, 0, dataset.length);
                     times[j][i] = runDataset(localCopy, j);
                 }
@@ -53,6 +53,8 @@ public class SortDriver
             }
 
             double[] stdDevs = generateStandardDeviations(means, times);
+
+            printTValues(times, means);
 
             outputFile(means, stdDevs, size);
         }
@@ -161,4 +163,51 @@ public class SortDriver
             System.err.print("IO Exception!" + e + "\n");
         }
     } // end outputFile
+
+    /**
+     * Calculates the t-values for all the algorithms at the current size,
+     * and prints the results to console
+     *
+     * @param times A 2D array of all the times for the algorithms
+     * @param means An array of the mean time for each algorithm
+     */
+    private static void printTValues(long[][] times, double[] means)
+    {
+        System.out.println("\nNEW DATASET\n");
+
+        for (int algorithmA = 0; algorithmA < NUM_ALGORITHMS - 1; algorithmA++)
+        {
+            for (int algorithmB = algorithmA + 1; algorithmB < NUM_ALGORITHMS; algorithmB++)
+            {
+                double total = 0;
+                for (int numTrial = 0; numTrial < NUM_TESTS; numTrial++)
+                {
+                    total += Math.pow(times[algorithmA][numTrial] - means[algorithmA] - (times[algorithmB][numTrial] - means[algorithmB]), 2);
+                }
+                double tValue = Math.abs(means[algorithmA] - means[algorithmB]) * Math.sqrt(NUM_TESTS * (NUM_TESTS - 1) / total);
+                System.out.printf("%s vs. %s: %s (t = %.3f)\n",
+                        getAlgorithmFromID(algorithmA), getAlgorithmFromID(algorithmB), tValue > 1.812461 ? "SIGNIFICANT" : "INSIGNIFICANT", tValue);
+            }
+        }
+    } // end printTValues
+
+    private static String getAlgorithmFromID(int ID)
+    {
+        switch (ID){
+            case 0:
+                return "Selection";
+            case 1:
+                return "Bubble";
+            case 2:
+                return "Insertion";
+            case 3:
+                return "Merge";
+            case 4:
+                return "Quick";
+            case 5:
+                return "Radix";
+            default:
+                return "Algorithm not recognized";
+        }
+    }
 }
