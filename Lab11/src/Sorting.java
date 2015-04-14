@@ -1,6 +1,9 @@
+import queue.QueueReferenceBased;
+
+import java.util.ArrayList;
+
 public class Sorting
 {
-
 
     public static <E extends Comparable<? super E>> E kSmall(int k,
                                                              E[] array, int first, int last)
@@ -384,4 +387,70 @@ public class Sorting
             }  // end for unsorted
         }  // end for h
     }  // end shellsort
+
+    /**
+     * Sorts an array of Integer in ascending order using Radix Sort.
+     *
+     * @param Q         is the array of Integer to sort.
+     * @param numdigits is the maximum number of digits of any number
+     *                  in the array <code>Q</code>.
+     * @param numbase   is the base of the number.
+     */
+    public static void radixSort(Integer[] Q, int numdigits, int numbase)
+    {
+        radix(Q, 1, numdigits, numbase);
+    }
+
+    /**
+     * performs one pass of the radix sort algorithm: the method
+     * sorts the number contained in Q by increasing value of the
+     * <code>k</code><sup>th</sup> digit, and makes a recursive calls
+     * to the next column when necessary. This implementation relies
+     * on queues.
+     *
+     * @param Q         contains the Integer to sort.
+     * @param k         is the position of the digits (from right to left)that
+     *                  we are considering for this pass of radix sort.
+     * @param numdigits maximal number of digits of any number in Q
+     * @param numbase   base of the integer.
+     */
+    public static void radix(Integer[] Q, int k, int numdigits, int numbase)
+    {
+        // creation of the array
+        ArrayList<QueueReferenceBased<Integer>> pockets =
+                new ArrayList<QueueReferenceBased<Integer>>(numbase);
+        //instantiation of the array
+        for (int i = 0; i < numbase; i++)
+            pockets.add(i, new QueueReferenceBased<Integer>());
+        //enqueue the appropriate pockets
+        for (int i = 0; i < Q.length; i++)
+            pockets.get(getKthNumber(Q[i], k, numbase)).enqueue(Q[i]);
+        // dequeue the pockets in the appropriate order
+        int index = 0;
+        for (int i = 0; i < numbase; i++)
+        {
+            while (!pockets.get(i).isEmpty())
+            {
+                Q[index] = pockets.get(i).dequeue();
+                index++;
+            }
+        }
+        // Make recursive call if necessary
+        if (k < numdigits)
+            radix(Q, k + 1, numdigits, numbase);
+    } // end RadSort
+
+    /**
+     * find the kth digit of the specified number written in a specified base
+     *
+     * @param num     is the number considered
+     * @param k       is the position of the digit we want to know (from the right)
+     * @param numbase is the base used to write <code>num</code> (ex base 10).
+     */
+    public static int getKthNumber(Integer num, int k, int numbase)
+    {
+        return (num / (int) Math.pow(numbase, k - 1)) % numbase;
+    }
+
+
 }
