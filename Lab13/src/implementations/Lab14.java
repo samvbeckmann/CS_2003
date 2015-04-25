@@ -1,22 +1,22 @@
-package gpa;
+package implementations;
 
-import BinaryTrees.BinarySearchTree;
-import BinaryTrees.TreeIterator;
+import BinaryTrees.HeapSort;
+import gpa.GraduateStudentGPA;
+import gpa.StudentGPA;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.Vector;
 
 /**
- * Lab 13: TreeSort using a Binary Search Tree
- *
  * @author Sam Beckmann
  *         ID: 1443946
- *         CS 2003-01
+ *         CS 2000-01
  */
-public class Lab13
+public class Lab14
 {
     /**
      * Name of the file that contains the input.
@@ -25,8 +25,9 @@ public class Lab13
 
     public static void main(String[] args)
     {
-        BinarySearchTree<StudentGPA> tree = parseFile(new File(FILENAME));
-        System.out.println(printResults(tree));
+        Vector<StudentGPA> vec = parseFile(new File(FILENAME));
+        new HeapSort<StudentGPA>().heapSort(vec);
+        System.out.println(printResults(vec));
     } // end main
 
     /**
@@ -35,9 +36,9 @@ public class Lab13
      * @param file Input file to be parsed.
      * @return A BinarySearchTree created from the input file.
      */
-    private static BinarySearchTree<StudentGPA> parseFile(File file)
+    private static Vector<StudentGPA> parseFile(File file)
     {
-        BinarySearchTree<StudentGPA> tree = new BinarySearchTree<StudentGPA>();
+        Vector<StudentGPA> vector = new Vector<StudentGPA>();
         try
         {
             BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -49,31 +50,30 @@ public class Lab13
                 String initials = input.next();
                 double gpa = input.nextDouble();
                 if (input.hasNext())
-                    tree.insert(new GraduateStudentGPA(id, initials, gpa, input.next()));
+                    vector.add(new GraduateStudentGPA(id, initials, gpa, input.next()));
                 else
-                    tree.insert(new StudentGPA(id, initials, gpa));
+                    vector.add(new StudentGPA(id, initials, gpa));
                 currLine = reader.readLine();
             }
         } catch (IOException e)
         {
-            System.err.print("Encounter IO error creating Binary Tree from data.\n" + e);
+            System.err.print("Encounter IO error creating Vector from data.\n" + e);
         }
-        return tree;
+        return vector;
     } // end parseFile
 
     /**
      * Returns a formatted String of all the students, in order of their GPA.
      *
-     * @param tree BinarySearchTree to be iterated through.
+     * @param vector BinarySearchTree to be iterated through.
      * @return String of all students, sorted by GPA.
      */
-    private static String printResults(BinarySearchTree<StudentGPA> tree)
+    private static String printResults(Vector<StudentGPA> vector)
     {
-        TreeIterator<StudentGPA> iterator = new TreeIterator<StudentGPA>(tree);
         String result = "";
-        while (iterator.hasNext())
+        for (StudentGPA gpa : vector)
         {
-            result += iterator.next().toString() + "\n";
+            result += gpa.toString() + "\n";
         }
         return result;
     } // end printResults
