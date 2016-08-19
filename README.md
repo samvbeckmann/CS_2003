@@ -46,5 +46,5 @@ Creating a set data type.
 #### Project 2:
 Solving the NQueens problem recursively. (And iteratively!)
 
-### Project 3:
+#### Project 3:
 Finding flight paths between cites using backtracking and a stack.
