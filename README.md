@@ -48,9 +48,3 @@ Solving the NQueens problem recursively. (And iteratively!)
 
 ### Project 3:
 Finding flight paths between cites using backtracking and a stack.
-
-Copyright
----------
-
-Although I generally endorse open-source code, this repository contains some classes not written by me,
-and as such will remain private.
