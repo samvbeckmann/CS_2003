@@ -31,10 +31,10 @@ Evaluating integer postfix expressions.
 #### Lab 8:
 Simulating a Queue to estimate total wait time.
 
-### Lab 9:
+#### Lab 9:
 Implementing a Sorted List.
 
-### Lab 10:
+#### Lab 10:
 Implementing a Radix Sort.
 
 Projects
